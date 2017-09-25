@@ -3,7 +3,16 @@ python:
 - '3.6'
 install:
 - pip install ansible==2.3.0 molecule apache-libcloud
+env:
+- GCE_SERVICE_ACCOUNT_EMAIL='570678884499-compute@developer.gserviceaccount.com' GCE_CREDENTIALS_FILE="$(pwd)/.gce_libcloud_auth"
+  GCE_PROJECT_ID='week-3-178314'
 script:
 - molecule --debug test
 after_script:
 - molecule --debug destroy
+before_install:
+- openssl aes-256-cbc -K $encrypted_d5212a2c1d0b_key -iv $encrypted_d5212a2c1d0b_iv
+  -in secrets.tar.enc -out secrets.tar -d
+- tar xvf secrets.tar
+- mv google_compute_engine /home/travis/.ssh/
+- chmod 0600 /home/travis/.ssh/google_compute_engine
